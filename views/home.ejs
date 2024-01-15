@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+    <h1>
+    <% if (message) { %>
+        <p><%= message %></p>
+    <% } %>
+  </h1>
+    <p>Welcome to the home page, <%= user.username %>!</p>
+    <button type="submit" id="signUp">Sign Up</button>
+    <button type="submit" id="signIn">Login</button>
+</body>
+<script>
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    signUpButton.addEventListener('click', () => {
+        window.location.href = "/register";
+    });
+    signInButton.addEventListener('click', () => {
+        window.location.href = "/login";
+    });
+</script>
+</html>
