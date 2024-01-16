@@ -4,17 +4,56 @@ const User = require('../models/users');
 const bcrypt = require('bcrypt');
 const flash = require('express-flash');
 const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 // Use express-flash and express-session middleware
 router.use(session({ 
-  secret: 'your-secret-key', 
+  secret: 'Viswesh', 
   resave: true, 
   saveUninitialized: true 
 }));
 router.use(flash());
+router.use(passport.initialize());
+router.use(passport.session());
+
+// Passport.js user serialization and deserialization
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error);
+  }
+});
+// Passport.js local strategy
+passport.use(new LocalStrategy(
+  async (username, password, done) => {
+    try {
+      const user = await User.findOne({ username });
+      if (!user) {
+        return done(null, false, { message: 'Username or password is incorrect' });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+        return done(null, false, { message: 'Username or password is incorrect' });
+      }
+
+      return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
+  }
+));
 
 router.get('/', (req, res) => {
-  res.render('home', { message: 'Home Page', user: 'Please login' });
+  res.render('home', { user: req.user, message: 'Home Page' });
 });
 
 router.get('/login', (req, res) => {
@@ -25,7 +64,6 @@ router.get('/register', (req, res) => {
   res.render('register', { message: req.flash('message') });
 });
 
-// register a person by username,password,phone number and mail id to the Users collection
 router.post('/register', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -36,7 +74,6 @@ router.post('/register', async (req, res) => {
       phonenumber: req.body.phoneNumber,
     });
 
-    // find if the user already exists by username, email, or phone number
     const existingUser = await User.findOne({
       $or: [
         { username: req.body.username },
@@ -60,33 +97,32 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// login a person by username and password to the Users collection
-router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true
+}));
 
-  try {
-    const user = await User.findOne({ username });
-
-    if (!user) {
-      req.flash('message', 'Username or password is incorrect');
-      return res.redirect('/login');
+// logout the user and redirect to home page
+router.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
     }
+    res.redirect('/');
+  });
+});
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) {
-      req.flash('message', 'Username or password is incorrect');
-      return res.redirect('/login');
-    }
-
-    // Log in successful, set session and redirect to home or dashboard
-    req.session.user = user;
-    res.redirect('/', { message: 'Home Page', user: req.user.username } });
-  } catch (error) {
-    console.error(error);
-    req.flash('message', 'An error occurred during login');
-    res.redirect('/login');
+// get user profile from the collection and display it
+router.get('/profile', (req,res)=>{
+  try{
+    res.render('profile',{user:req.user});
   }
+  catch(error){
+    console.log(error);
+  }
+
 });
 
 module.exports = router;

@@ -6,23 +6,48 @@
     <title>Home Page</title>
 </head>
 <body>
-    <h1>
-    <% if (message) { %>
-        <p><%= message %></p>
+    <% if (user) { %>
+        <p>Welcome, <%= user.username %>!</p>
+        <button type="button" id="logout">Logout</button> | <button type="button" id="profile">Profile</button>
+    <% } else { %>
+        <% if (message) { %>
+            <p><%= message %></p>
+        <% } %>
+        <p>Welcome to the home page</p>
+        <button type="button" id="signUp">Sign Up</button> | <button type="button" id="signIn">Login</button>
     <% } %>
-  </h1>
-    <p>Welcome to the home page, <%= user %>!</p>
-    <button type="submit" id="signUp">Sign Up</button>
-    <button type="submit" id="signIn">Login</button>
-</body>
-<script>
+
+    <script>
+        //button click event for sign up and sign in
     const signUpButton = document.getElementById('signUp');
     const signInButton = document.getElementById('signIn');
-    signUpButton.addEventListener('click', () => {
-        window.location.href = "/register";
-    });
-    signInButton.addEventListener('click', () => {
-        window.location.href = "/login";
-    });
-</script>
+    const logoutButton = document.getElementById('logout');
+    const profileButton = document.getElementById('profile');
+
+    if (signUpButton) {
+        signUpButton.addEventListener('click', () => {
+            window.location.href = "/register";
+        });
+    }
+
+    if (signInButton) {
+        signInButton.addEventListener('click', () => {
+            window.location.href = "/login";
+        });
+    }
+
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            window.location.href = "/logout";
+        });
+    }
+
+    if (profileButton) {
+        profileButton.addEventListener('click', () => {
+            window.location.href = "/profile";
+        });
+    }
+        
+    </script>
+</body>
 </html>
