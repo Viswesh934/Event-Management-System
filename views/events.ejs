@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Dashboard</title>
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fefefe;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 300px;
+    }
+
+    .close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Event Dashboard</h2>
+
+  <form action="/dashboard" method="post">
+    <label for="filterBy">Filter by:</label>
+    <select id="filterBy" name="filterBy">
+      <option value="organizerEmail">Organizer's Email</option>
+      <option value="organizerPhoneNumber">Organizer's Phone Number</option>
+      <option value="eventDate">Event Date</option>
+      <option value="eventTime">Event Time</option>
+      <option value="eventVenue">Event Venue</option>
+      <option value="eventOrganizer">Event Organizer</option>
+    </select>
+    <input type="text" id="filterValue" name="filterValue" placeholder="Enter a value">
+    <button type="submit">Filter</button>
+  </form>
+
+
+  <% if (events.length> 0) { %>
+    <ul>
+      <% events.forEach(event=> { %>
+        <li>
+          <h3>
+            <%= event.eventname %>
+          </h3>
+          <p>Description: <%= event.eventdescription %>
+          </p>
+          <p>Date: <%= event.eventdate.toDateString() %>
+          </p>
+          <p>Time: <%= event.eventtime %>
+          </p>
+          <p>Venue: <%= event.eventvenue %>
+          </p>
+          <p>Organizer: <%= event.eventorganizer %>
+          </p>
+          <p>Organizer's Email: <%= event.eventorganizeremail %>
+          </p>
+          <p>Organizer's Phone Number: <%= event.eventorganizerphonenumber %>
+          </p>
+          <button type="button" class="registerBtn" 
+            data-eventname="<%= event.eventname %>"
+            data-eventid="<%= event._id %>">Register</button>
+        </li>
+        <% }); %>
+    </ul>
+    <% } else { %>
+      <p>No events available.</p>
+      <% } %>
+
+        <p><a href="/">Go back to Home</a></p>
+        <div id="registrationModal" class="modal">
+          <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+
+            <h2>Event Registration</h2>
+            <form id="registrationForm" method="post" action="/analysis">
+              <input type="hidden" id="eventNameInput" name="eventName" required>
+              <input type="hidden" id="eventIdInput" name="eventId" required>              
+              <label for="participantName">Name:</label>
+              <input type="text" id="participantName" name="participantName" required>
+              <label for="Organizationname">Organization:</label>
+              <input type="text" id="Organizationname" name="Organizationname" required>
+              <button type="submit">Register</button>
+            </form>
+          </div>
+        </div>
+</body>
+<script>
+  // Function to show the modal
+  function openModal() {
+    document.getElementById('registrationModal').style.display = 'block';
+  }
+
+  // Function to hide the modal
+  function closeModal() {
+    document.getElementById('registrationModal').style.display = 'none';
+  }
+
+  document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('registerBtn')) {
+  
+      const eventName = event.target.getAttribute('data-eventname');
+      const eventId = event.target.getAttribute('data-eventid');
+
+    
+      document.getElementById('eventNameInput').value = eventName;
+      document.getElementById('eventIdInput').value = eventId;
+
+      // Show the registration modal
+      openModal();
+    }
+  });
+
+
+
+
+  document.getElementById('registrationForm').addEventListener('submit', async function (event) {
+
+  });
+</script>
+
+</html>
