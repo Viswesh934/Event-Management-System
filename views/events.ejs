@@ -56,55 +56,64 @@
     <button type="submit">Filter</button>
   </form>
 
+  <% if (user && user.role=='admin') { %>
+    <button type="button" class="addEventBtn">Add Event</button>
+    <% } %>
 
-  <% if (events.length> 0) { %>
-    <ul>
-      <% events.forEach(event=> { %>
-        <li>
-          <h3>
-            <%= event.eventname %>
-          </h3>
-          <p>Description: <%= event.eventdescription %>
-          </p>
-          <p>Date: <%= event.eventdate.toDateString() %>
-          </p>
-          <p>Time: <%= event.eventtime %>
-          </p>
-          <p>Venue: <%= event.eventvenue %>
-          </p>
-          <p>Organizer: <%= event.eventorganizer %>
-          </p>
-          <p>Organizer's Email: <%= event.eventorganizeremail %>
-          </p>
-          <p>Organizer's Phone Number: <%= event.eventorganizerphonenumber %>
-          </p>
-          <button type="button" class="registerBtn" 
-            data-eventname="<%= event.eventname %>"
-            data-eventid="<%= event._id %>">Register</button>
-        </li>
-        <% }); %>
-    </ul>
-    <% } else { %>
-      <p>No events available.</p>
-      <% } %>
+      <% if (events.length> 0) { %>
+        <ul>
+          <% events.forEach(event=> { %>
+            <li>
+              <h3>
+                <%= event.eventname %>
+              </h3>
+              <p>Description: <%= event.eventdescription %>
+              </p>
+              <p>Date: <%= event.eventdate.toDateString() %>
+              </p>
+              <p>Time: <%= event.eventtime %>
+              </p>
+              <p>Venue: <%= event.eventvenue %>
+              </p>
+              <p>Organizer: <%= event.eventorganizer %>
+              </p>
+              <p>Organizer's Email: <%= event.eventorganizeremail %>
+              </p>
+              <p>Organizer's Phone Number: <%= event.eventorganizerphonenumber %>
+              </p>
+              <% if (user && user.role=='admin') { %>
 
-        <p><a href="/">Go back to Home</a></p>
-        <div id="registrationModal" class="modal">
-          <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
+                <button type="button" class="editBtn" data-eventname="<%= event.eventname %>"
+                  data-eventid="<%= event._id %>">Edit</button>
+                <button type="button" class="deleteBtn" data-eventid="<%= event._id %>">Delete</button>
+                <% } %>
 
-            <h2>Event Registration</h2>
-            <form id="registrationForm" method="post" action="/analysis">
-              <input type="hidden" id="eventNameInput" name="eventName" required>
-              <input type="hidden" id="eventIdInput" name="eventId" required>              
-              <label for="participantName">Name:</label>
-              <input type="text" id="participantName" name="participantName" required>
-              <label for="Organizationname">Organization:</label>
-              <input type="text" id="Organizationname" name="Organizationname" required>
-              <button type="submit">Register</button>
-            </form>
-          </div>
-        </div>
+                  <button type="button" class="registerBtn" data-eventname="<%= event.eventname %>"
+                    data-eventid="<%= event._id %>">Register</button>
+            </li>
+            <% }); %>
+        </ul>
+        <% } else { %>
+          <p>No events available.</p>
+          <% } %>
+
+            <p><a href="/">Go back to Home</a></p>
+            <div id="registrationModal" class="modal">
+              <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+
+                <h2>Event Registration</h2>
+                <form id="registrationForm" method="post" action="/analysis">
+                  <input type="hidden" id="eventNameInput" name="eventName" required>
+                  <input type="hidden" id="eventIdInput" name="eventId" required>
+                  <label for="participantName">Name:</label>
+                  <input type="text" id="participantName" name="participantName" required>
+                  <label for="Organizationname">Organization:</label>
+                  <input type="text" id="Organizationname" name="Organizationname" required>
+                  <button type="submit">Register</button>
+                </form>
+              </div>
+            </div>
 </body>
 <script>
   // Function to show the modal
@@ -119,11 +128,11 @@
 
   document.addEventListener('click', function (event) {
     if (event.target.classList.contains('registerBtn')) {
-  
+
       const eventName = event.target.getAttribute('data-eventname');
       const eventId = event.target.getAttribute('data-eventid');
 
-    
+
       document.getElementById('eventNameInput').value = eventName;
       document.getElementById('eventIdInput').value = eventId;
 

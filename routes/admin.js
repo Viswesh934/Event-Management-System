@@ -50,7 +50,7 @@ router.post('/analysis', async (req, res) => {
 
 router.get('/analytics', async (req, res) => {
     try {
-    
+
         const analyticsData = await Analysis.find();
 
         // Extract relevant data for charts
@@ -65,6 +65,100 @@ router.get('/analytics', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+router.post('/create-event', async (req, res) => {
+    if (req.user.role === 'admin') {
+        try {
+            const {
+                eventName,
+                eventDescription,
+                eventDate,
+                eventTime,
+                eventVenue,
+                eventFee,
+                eventOrganizer,
+                eventOrganizerEmail,
+                eventOrganizerPhoneNumber
+            } = req.body;
+
+            const event = new events({
+                eventName,
+                eventDescription,
+                eventDate,
+                eventTime,
+                eventVenue,
+                eventFee,
+                eventOrganizer,
+                eventOrganizerEmail,
+                eventOrganizerPhoneNumber
+            });
+
+            await event.save();
+            res.redirect('/events', { msg: 'Event Created Successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        res.redirect('/events', { msg: 'You are not authorized to create events' });
+    }
+});
+
+router.put('/edit-event/:id', async (req, res) => {
+    if (req.user.role === 'admin') {
+        try {
+            const { id } = req.params;
+            const {
+                eventName,
+                eventDescription,
+                eventDate,
+                eventTime,
+                eventVenue,
+                eventOrganizer,
+                eventOrganizerEmail,
+                eventOrganizerPhoneNumber
+            } = req.body;
+
+            const event = await events.findById(id);
+            event.eventName = eventName;
+            event.eventDescription = eventDescription;
+            event.eventDate = eventDate;
+            event.eventTime = eventTime;
+            event.eventVenue = eventVenue;
+            event.eventOrganizer = eventOrganizer;
+            event.eventOrganizerEmail = eventOrganizerEmail;
+            event.eventOrganizerPhoneNumber = eventOrganizerPhoneNumber;
+
+            await event.save();
+            res.redirect('/events', { msg: 'Event Updated Successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        res.redirect('/events', { msg: 'You are not authorized to edit events' });
+    }
+});
+
+router.delete('/delete-event/:id', async (req, res) => {
+    if (req.user.role === 'admin') {
+        try {
+            const { id } = req.params;
+            await events.findByIdAndDelete(id);
+            res.redirect('/events', { msg: 'Event Deleted Successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        }
+    } else {
+        res.redirect('/events', { msg: 'You are not authorized to delete events' });
+    }
+});
+
+
+
+
 
 module.exports = router;
 
