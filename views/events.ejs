@@ -56,8 +56,8 @@
     <button type="submit">Filter</button>
   </form>
 
-  <% if (user && user.role=='admin') { %>
-    <button type="button" class="addEventBtn">Add Event</button>
+  <% if (user && user.role=='admin' ) { %>
+    <button type="button" class="addEventBtn" onclick="openAddEventModal()">Add Event</button>
     <% } %>
 
       <% if (events.length> 0) { %>
@@ -81,27 +81,29 @@
               </p>
               <p>Organizer's Phone Number: <%= event.eventorganizerphonenumber %>
               </p>
-              <% if (user && user.role=='admin') { %>
+              <% if (user && user.role=='admin' ) { %>
+                <form action="/delete-event/<%= event._id %>?_method=DELETE" method="post">
+                  <button type="submit">Delete</button>
+                </form>
 
-                <button type="button" class="editBtn" data-eventname="<%= event.eventname %>"
-                  data-eventid="<%= event._id %>">Edit</button>
-                <button type="button" class="deleteBtn" data-eventid="<%= event._id %>">Delete</button>
                 <% } %>
-
                   <button type="button" class="registerBtn" data-eventname="<%= event.eventname %>"
                     data-eventid="<%= event._id %>">Register</button>
+
+                  <!-- Edit event form -->
             </li>
             <% }); %>
         </ul>
         <% } else { %>
           <p>No events available.</p>
           <% } %>
-
             <p><a href="/">Go back to Home</a></p>
             <div id="registrationModal" class="modal">
               <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
 
+
+                <!--Registration div-->
                 <h2>Event Registration</h2>
                 <form id="registrationForm" method="post" action="/analysis">
                   <input type="hidden" id="eventNameInput" name="eventName" required>
@@ -114,8 +116,85 @@
                 </form>
               </div>
             </div>
+
+            <!--Create event div-->
+            <div id="addEventModal" class="modal">
+              <div class="modal-content">
+                <span class="close" onclick="closeAddEventModal()">&times;</span>
+
+                <h2>Add Event</h2>
+                <form id="addEventForm" method="post" action="/create-event">
+                  <label for="eventname">Event Name:</label>
+                  <input type="text" id="eventname" name="eventname" required>
+
+                  <label for="eventdescription">Event Description:</label>
+                  <textarea id="eventdescription" name="eventdescription" required></textarea>
+
+                  <label for="eventdate">Event Date:</label>
+                  <input type="date" id="eventdate" name="eventdate" required>
+
+                  <label for="eventtime">Event Time:</label>
+                  <input type="text" id="eventtime" name="eventtime" required>
+
+                  <label for="eventvenue">Event Venue:</label>
+                  <input type="text" id="eventvenue" name="eventvenue" required>
+
+                  <label for="eventorganizer">Event Organizer:</label>
+                  <input type="text" id="eventorganizer" name="eventorganizer" required>
+
+                  <label for="eventorganizeremail">Organizer's Email:</label>
+                  <input type="email" id="eventorganizeremail" name="eventorganizeremail" required>
+
+                  <label for="eventorganizerphonenumber">Organizer's Phone Number:</label>
+                  <input type="tel" id="eventorganizerphonenumber" name="eventorganizerphonenumber" required>
+
+                  <button type="submit">Create Event</button>
+                </form>
+              </div>
+            </div>
+            <!--Edit event-->
+
+            <div id="editEventModal" class="modal">
+              <div class="modal-content">
+                <span class="close" onclick="closeEditEventModal()">&times;</span>
+
+                <h2>Edit Event</h2>
+                <form id="editEventForm" method="post" action="/edit-event/:id">
+                  <!-- Add a hidden field for method override -->
+                  <input type="hidden" name="_method" value="PUT">
+
+                  <label for="eventname-e">Event Name:</label>
+                  <input type="text" id="eventname-e" name="eventname" required>
+
+                  <label for="eventdescription-e">Event Description:</label>
+                  <textarea id="eventdescription-e" name="eventdescription" required></textarea>
+
+                  <label for="eventdate-e">Event Date:</label>
+                  <input type="date" id="eventdate-e" name="eventdate" required>
+
+                  <label for="eventtime-e">Event Time:</label>
+                  <input type="text" id="eventtime-e" name="eventtime" required>
+
+                  <label for="eventvenue-e">Event Venue:</label>
+                  <input type="text" id="eventvenue-e" name="eventvenue" required>
+
+                  <label for="eventorganizer-e">Event Organizer:</label>
+                  <input type="text" id="eventorganizer-e" name="eventorganizer" required>
+
+                  <label for="eventorganizeremail-e">Organizer's Email:</label>
+                  <input type="email" id="eventorganizeremail-e" name="eventorganizeremail" required>
+
+                  <label for="eventorganizerphonenumber-e">Organizer's Phone Number:</label>
+                  <input type="tel" id="eventorganizerphonenumber-e" name="eventorganizerphonenumber" required>
+
+                  <button type="submit">Save Changes</button>
+                </form>
+              </div>
+            </div>
 </body>
 <script>
+
+
   // Function to show the modal
   function openModal() {
     document.getElementById('registrationModal').style.display = 'block';
@@ -128,10 +207,8 @@
 
   document.addEventListener('click', function (event) {
     if (event.target.classList.contains('registerBtn')) {
-
+      eventId = event.target.getAttribute('data-eventid');
       const eventName = event.target.getAttribute('data-eventname');
-      const eventId = event.target.getAttribute('data-eventid');
-
 
       document.getElementById('eventNameInput').value = eventName;
       document.getElementById('eventIdInput').value = eventId;
@@ -140,13 +217,40 @@
       openModal();
     }
   });
+  function openEditEventModal(eventData) {
+    // Parse the JSON string to get the event object
+    const event = JSON.parse(eventData);
 
+    // Use the event data to populate the edit form
+    document.getElementById('eventname-e').value = event.eventname;
+    document.getElementById('eventdescription-e').value = event.eventdescription;
+    document.getElementById('eventdate-e').value = event.eventdate.split('T')[0]; // Extract date part
+    document.getElementById('eventtime-e').value = event.eventtime;
+    document.getElementById('eventvenue-e').value = event.eventvenue;
+    document.getElementById('eventorganizer-e').value = event.eventorganizer;
+    document.getElementById('eventorganizeremail-e').value = event.eventorganizeremail;
+    document.getElementById('eventorganizerphonenumber-e').value = event.eventorganizerphonenumber;
 
+    // Show the edit event modal
+    document.getElementById('editEventModal').style.display = 'block';
+  }
+  // function to display create event
+  function openAddEventModal() {
+    document.getElementById('addEventModal').style.display = 'block';
+  }
 
+  function closeAddEventModal() {
+    document.getElementById('addEventModal').style.display = 'none';
+  }
 
-  document.getElementById('registrationForm').addEventListener('submit', async function (event) {
-
+  document.getElementById('addEventBtn').addEventListener('click', function () {
+    openAddEventModal();
   });
+
+
+
+
 </script>
+
 
 </html>

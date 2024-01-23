@@ -68,40 +68,44 @@ router.get('/analytics', async (req, res) => {
 
 
 router.post('/create-event', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.redirect('/login'); // Redirect to login if not authenticated
+    }
     if (req.user.role === 'admin') {
         try {
             const {
-                eventName,
-                eventDescription,
-                eventDate,
-                eventTime,
-                eventVenue,
-                eventFee,
-                eventOrganizer,
-                eventOrganizerEmail,
-                eventOrganizerPhoneNumber
+                eventname,
+                eventdescription,
+                eventdate,
+                eventtime,
+                eventvenue,
+                eventorganizer,
+                eventorganizeremail,
+                eventorganizerphonenumber
             } = req.body;
 
             const event = new events({
-                eventName,
-                eventDescription,
-                eventDate,
-                eventTime,
-                eventVenue,
-                eventFee,
-                eventOrganizer,
-                eventOrganizerEmail,
-                eventOrganizerPhoneNumber
+                eventname,
+                eventdescription,
+                eventdate,
+                eventtime,
+                eventvenue,
+                eventorganizer,
+                eventorganizeremail,
+                eventorganizerphonenumber
             });
+            const decodedEventName = decodeURIComponent(eventname);
+            const decodedEventTime = decodeURIComponent(eventtime);
+            const decodedOrganizerEmail = decodeURIComponent(eventorganizeremail);
 
             await event.save();
-            res.redirect('/events', { msg: 'Event Created Successfully' });
+            res.redirect('/events', { message: 'Event Created Successfully' });
         } catch (error) {
             console.error(error);
             res.status(500).send('Internal Server Error');
         }
     } else {
-        res.redirect('/events', { msg: 'You are not authorized to create events' });
+        res.redirect('/events', { message: 'You are not authorized to create events' });
     }
 });
 
@@ -131,7 +135,7 @@ router.put('/edit-event/:id', async (req, res) => {
             event.eventOrganizerPhoneNumber = eventOrganizerPhoneNumber;
 
             await event.save();
-            res.redirect('/events', { msg: 'Event Updated Successfully' });
+            res.redirect('/events', { messge: 'Event Updated Successfully' });
         } catch (error) {
             console.error(error);
             res.status(500).send('Internal Server Error');
@@ -146,7 +150,7 @@ router.delete('/delete-event/:id', async (req, res) => {
         try {
             const { id } = req.params;
             await events.findByIdAndDelete(id);
-            res.redirect('/events', { msg: 'Event Deleted Successfully' });
+            res.redirect('/events');
         } catch (error) {
             console.error(error);
             res.status(500).send('Internal Server Error');
