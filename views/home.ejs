@@ -10,6 +10,9 @@
         <p>Welcome, <%= user.username %>!</p>
         <button type="button" id="logout">Logout</button> | <button type="button" id="profile">Profile</button>
         <button type="button" id="events">Events</button>
+        <%if (user.role=='admin'){%>
+        <button type="button" id="dashboard">Analytics</button>
+        <%}%>
     <% } else { %>
         <% if (message) { %>
             <p><%= message %></p>
@@ -25,6 +28,7 @@
     const logoutButton = document.getElementById('logout');
     const profileButton = document.getElementById('profile');
     const events = document.getElementById('events');
+    const Analytics= document.getElementById('dashboard');
 
     if (signUpButton) {
         signUpButton.addEventListener('click', () => {
@@ -55,6 +59,11 @@
        
             });
 
+     }
+     if(Analytics){
+        Analytics.addEventListener('click',()=>{
+            window.location.href="/analytics"
+        });
      }
     
 

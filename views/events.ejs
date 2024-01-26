@@ -87,6 +87,8 @@
                 </form>
 
                 <% } %>
+                  <button type="button" class="addToCalendarBtn" data-eventDetails="<%= JSON.stringify(event) %>">Add to
+                    Google Calendar</button>
                   <button type="button" class="registerBtn" data-eventname="<%= event.eventname %>"
                     data-eventid="<%= event._id %>">Register</button>
 
@@ -189,6 +191,21 @@
     document.getElementById('addEventModal').style.display = 'none';
   }
 
+
+  // Adding the event to google calendar
+
+  document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('addToCalendarBtn')) {
+
+      const eventDetails = JSON.parse(event.target.getAttribute('data-eventDetails'));
+
+      // Create a Google Calendar event link
+      const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventDetails.eventname)}&dates=${encodeURIComponent(eventDetails.eventdate)}T${encodeURIComponent(eventDetails.eventtime)}&details=${encodeURIComponent(eventDetails.eventdescription)}&location=${encodeURIComponent(eventDetails.eventvenue)}`;
+
+
+      window.open(googleCalendarLink, '_blank');
+    }
+  });
   document.getElementById('addEventBtn').addEventListener('click', function () {
     openAddEventModal();
   });

@@ -149,7 +149,11 @@ router.delete('/delete-event/:id', async (req, res) => {
     if (req.user.role === 'admin') {
         try {
             const { id } = req.params;
+            const deleteevent= await events.findById(id);
             await events.findByIdAndDelete(id);
+            
+            await Analysis.deleteOne({ eventName: deleteevent.eventname });
+
             res.redirect('/events');
         } catch (error) {
             console.error(error);
