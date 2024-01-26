@@ -90,7 +90,6 @@
                   <button type="button" class="registerBtn" data-eventname="<%= event.eventname %>"
                     data-eventid="<%= event._id %>">Register</button>
 
-                  <!-- Edit event form -->
             </li>
             <% }); %>
         </ul>
@@ -154,43 +153,6 @@
             </div>
             <!--Edit event-->
 
-            <div id="editEventModal" class="modal">
-              <div class="modal-content">
-                <span class="close" onclick="closeEditEventModal()">&times;</span>
-
-                <h2>Edit Event</h2>
-                <form id="editEventForm" method="post" action="/edit-event/:id">
-                  <!-- Add a hidden field for method override -->
-                  <input type="hidden" name="_method" value="PUT">
-
-                  <label for="eventname-e">Event Name:</label>
-                  <input type="text" id="eventname-e" name="eventname" required>
-
-                  <label for="eventdescription-e">Event Description:</label>
-                  <textarea id="eventdescription-e" name="eventdescription" required></textarea>
-
-                  <label for="eventdate-e">Event Date:</label>
-                  <input type="date" id="eventdate-e" name="eventdate" required>
-
-                  <label for="eventtime-e">Event Time:</label>
-                  <input type="text" id="eventtime-e" name="eventtime" required>
-
-                  <label for="eventvenue-e">Event Venue:</label>
-                  <input type="text" id="eventvenue-e" name="eventvenue" required>
-
-                  <label for="eventorganizer-e">Event Organizer:</label>
-                  <input type="text" id="eventorganizer-e" name="eventorganizer" required>
-
-                  <label for="eventorganizeremail-e">Organizer's Email:</label>
-                  <input type="email" id="eventorganizeremail-e" name="eventorganizeremail" required>
-
-                  <label for="eventorganizerphonenumber-e">Organizer's Phone Number:</label>
-                  <input type="tel" id="eventorganizerphonenumber-e" name="eventorganizerphonenumber" required>
-
-                  <button type="submit">Save Changes</button>
-                </form>
-              </div>
-            </div>
 </body>
 <script>
 
@@ -217,23 +179,7 @@
       openModal();
     }
   });
-  function openEditEventModal(eventData) {
-    // Parse the JSON string to get the event object
-    const event = JSON.parse(eventData);
 
-    // Use the event data to populate the edit form
-    document.getElementById('eventname-e').value = event.eventname;
-    document.getElementById('eventdescription-e').value = event.eventdescription;
-    document.getElementById('eventdate-e').value = event.eventdate.split('T')[0]; // Extract date part
-    document.getElementById('eventtime-e').value = event.eventtime;
-    document.getElementById('eventvenue-e').value = event.eventvenue;
-    document.getElementById('eventorganizer-e').value = event.eventorganizer;
-    document.getElementById('eventorganizeremail-e').value = event.eventorganizeremail;
-    document.getElementById('eventorganizerphonenumber-e').value = event.eventorganizerphonenumber;
-
-    // Show the edit event modal
-    document.getElementById('editEventModal').style.display = 'block';
-  }
   // function to display create event
   function openAddEventModal() {
     document.getElementById('addEventModal').style.display = 'block';

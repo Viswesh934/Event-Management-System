@@ -99,13 +99,13 @@ router.post('/create-event', async (req, res) => {
             const decodedOrganizerEmail = decodeURIComponent(eventorganizeremail);
 
             await event.save();
-            res.redirect('/events', { message: 'Event Created Successfully' });
+            res.redirect('/events');
         } catch (error) {
             console.error(error);
             res.status(500).send('Internal Server Error');
         }
     } else {
-        res.redirect('/events', { message: 'You are not authorized to create events' });
+        res.redirect('/events');
     }
 });
 
