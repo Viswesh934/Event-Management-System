@@ -1,26 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-</head>
-<body>
-    <h2>
-        Registration form
-    </h2>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-   
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #1b5a7a;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 16px;
+            color: #666;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+
     <form action="/register" method="post">
+        <h2>
+            Registration form
+        </h2>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
-        
+
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$" title="Password must contain at least 8 characters, including one number, one lowercase, and one uppercase letter." required>
+        <input type="password" id="password" name="password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+            title="Password must contain at least 8 characters, including one number, one lowercase, and one uppercase letter."
+            required>
 
         <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$" title="Password must contain at least 8 characters, including one number, one lowercase, and one uppercase letter." required oninput="checkPasswordMatch()">
+        <input type="password" id="confirmPassword" name="confirmPassword"
+            pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+            title="Password must contain at least 8 characters, including one number, one lowercase, and one uppercase letter."
+            required oninput="checkPasswordMatch()">
 
 
         <label for="email">Email:</label>
@@ -28,11 +103,10 @@
 
         <label for="phoneNumber">Phone Number:</label>
         <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="e.g., +1 123-456-7890" required>
-
         <button type="submit">Register</button>
+        <p>Already have an account? <a href="/login">Login</a></p>
     </form>
 
-    <p>Already have an account? <a href="/login">Login</a></p>
 </body>
 <!--script to check if the password matches the confirm password and show alert-->
 <script>
@@ -48,11 +122,12 @@
     }
 
     // Show alert based on the server-provided message
-    window.onload = function() {
+    window.onload = function () {
         var serverMessage = "<%= message %>";
         if (serverMessage === "User already exists") {
             alert("User already exists");
         }
     };
 </script>
+
 </html>
