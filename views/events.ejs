@@ -6,7 +6,86 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Event Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #3498db;
+      grid-column: span 2;
+    }
+
+    form {
+      text-align: center;
+      margin-bottom: 20px;
+      grid-column: span 2;
+    }
+
+    label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    select,
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      padding: 10px;
+      margin: 5px;
+      width: 100%;
+      border: 1px solid #3498db;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .event-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 20px;
+      grid-column: span 2;
+    }
+
+    .event-card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .event-card h3 {
+      color: #3498db;
+    }
+
+    .event-card p {
+      margin: 10px 0;
+    }
+
     .modal {
       display: none;
       position: fixed;
@@ -42,9 +121,9 @@
 <body>
   <h2>Event Dashboard</h2>
 
-  <form action="/dashboard" method="post">
+  <form action="/dashboard" method="post" class="filter-form">
     <label for="filterBy">Filter by:</label>
-    <select id="filterBy" name="filterBy">
+    <select id="filterBy" name="filterBy" class="filterBy">
       <option value="organizerEmail">Organizer's Email</option>
       <option value="organizerPhoneNumber">Organizer's Phone Number</option>
       <option value="eventDate">Event Date</option>
@@ -56,198 +135,181 @@
     <button type="submit">Filter</button>
   </form>
 
+  <div class="event-container">
   <% if (user && user.role=='admin' ) { %>
     <button type="button" class="addEventBtn" onclick="openAddEventModal()">Add Event</button>
     <% } %>
 
       <% if (events.length> 0) { %>
-        <ul>
-          <% events.forEach(event=> { %>
-            <li>
-              <h3>
-                <%= event.eventname %>
-              </h3>
-              <p>Description: <%= event.eventdescription %>
-              </p>
-              <p>Date: <%= event.eventdate.toDateString() %>
-              </p>
-              <p>Time: <%= event.eventtime %>
-              </p>
-              <p>Venue: <%= event.eventvenue %>
-              </p>
-              <p>Organizer: <%= event.eventorganizer %>
-              </p>
-              <p>Organizer's Email: <%= event.eventorganizeremail %>
-              </p>
-              <p>Organizer's Phone Number: <%= event.eventorganizerphonenumber %>
-              </p>
-              <% if (user && user.role=='admin' ) { %>
-                <form action="/delete-event/<%= event._id %>?_method=DELETE" method="post">
-                  <button type="submit">Delete</button>
-                </form>
-
-                <% } %>
-                  <button type="button" class="registerBtn" data-eventname="<%= event.eventname %>"
-                    data-eventid="<%= event._id %>">Register</button>
-
-                  <!-- Edit event form -->
-            </li>
-            <% }); %>
-        </ul>
-        <% } else { %>
-          <p>No events available.</p>
-          <% } %>
-            <p><a href="/">Go back to Home</a></p>
-            <div id="registrationModal" class="modal">
-              <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-
-
-                <!--Registration div-->
-                <h2>Event Registration</h2>
-                <form id="registrationForm" method="post" action="/analysis">
-                  <input type="hidden" id="eventNameInput" name="eventName" required>
-                  <input type="hidden" id="eventIdInput" name="eventId" required>
-                  <label for="participantName">Name:</label>
-                  <input type="text" id="participantName" name="participantName" required>
-                  <label for="Organizationname">Organization:</label>
-                  <input type="text" id="Organizationname" name="Organizationname" required>
-                  <button type="submit">Register</button>
-                </form>
-              </div>
+        <% events.forEach(event=> { %>
+          <div class="event-card">
+            <h3>
+              <%= event.eventname %>
+            </h3>
+            <p>Description: <%= event.eventdescription %>
+            </p>
+            <p>Date: <%= event.eventdate.toDateString() %>
+            </p>
+            <p>Time: <%= event.eventtime %>
+            </p>
+            <p>Venue: <%= event.eventvenue %>
+            </p>
+            <p>Organizer: <%= event.eventorganizer %>
+            </p>
+            <p>Organizer's Email: <%= event.eventorganizeremail %>
+            </p>
+            <p>Organizer's Phone Number: <%= event.eventorganizerphonenumber %>
+            </p>
+            <% if (user && user.role=='admin' ) { %>
+              <form action="/delete-event/<%= event._id %>?_method=DELETE" method="post">
+                <button type="submit">Delete</button>
+              </form>
+              <% } %>
+                <button type="button" class="addToCalendarBtn" data-eventDetails="<%= JSON.stringify(event) %>">
+                  Add to Google Calendar
+                </button>
+                <button type="button" class="registerBtn" data-eventname="<%= event.eventname %>"
+                  data-eventid="<%= event._id %>">
+                  Register
+                </button>
+          </div>
+          <% }); %>
+            <% } else { %>
+              <p>No events available.</p>
+              <% } %>
+                <p><a href="/">Go back to Home</a></p>
             </div>
 
-            <!--Create event div-->
-            <div id="addEventModal" class="modal">
-              <div class="modal-content">
-                <span class="close" onclick="closeAddEventModal()">&times;</span>
+                <div id="registrationModal" class="modal">
+                  <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
 
-                <h2>Add Event</h2>
-                <form id="addEventForm" method="post" action="/create-event">
-                  <label for="eventname">Event Name:</label>
-                  <input type="text" id="eventname" name="eventname" required>
 
-                  <label for="eventdescription">Event Description:</label>
-                  <textarea id="eventdescription" name="eventdescription" required></textarea>
+                    <!--Registration div-->
+                    <h2>Event Registration</h2>
+                    <form id="registrationForm" method="post" action="/analysis">
+                      <input type="hidden" id="eventNameInput" name="eventName" required>
+                      <input type="hidden" id="eventIdInput" name="eventId" required>
+                      <input type="text" id="participantName" name="participantName" placeholder="Your Name" required>
+                      <input type="text" id="Organizationname" name="Organizationname" placeholder="Organization"
+                        required>
+                      <button type="submit">Register</button>
+                    </form>
+                  </div>
+                </div>
 
-                  <label for="eventdate">Event Date:</label>
-                  <input type="date" id="eventdate" name="eventdate" required>
+                <!--Create event div-->
+                <div id="addEventModal" class="modal">
+                  <div class="modal-content">
+                    <span class="close" onclick="closeAddEventModal()">&times;</span>
 
-                  <label for="eventtime">Event Time:</label>
-                  <input type="text" id="eventtime" name="eventtime" required>
+                    <h2>Add Event</h2>
+                    <form id="addEventForm" method="post" action="/create-event">
+                      <label for="eventname">Event Name:</label>
+                      <input type="text" id="eventname" name="eventname" required>
 
-                  <label for="eventvenue">Event Venue:</label>
-                  <input type="text" id="eventvenue" name="eventvenue" required>
+                      <label for="eventdescription">Event Description:</label>
+                      <textarea id="eventdescription" name="eventdescription" required></textarea>
 
-                  <label for="eventorganizer">Event Organizer:</label>
-                  <input type="text" id="eventorganizer" name="eventorganizer" required>
+                      <label for="eventdate">Event Date:</label>
+                      <input type="date" id="eventdate" name="eventdate" required>
 
-                  <label for="eventorganizeremail">Organizer's Email:</label>
-                  <input type="email" id="eventorganizeremail" name="eventorganizeremail" required>
+                      <label for="eventtime">Event Time:</label>
+                      <input type="text" id="eventtime" name="eventtime" required>
 
-                  <label for="eventorganizerphonenumber">Organizer's Phone Number:</label>
-                  <input type="tel" id="eventorganizerphonenumber" name="eventorganizerphonenumber" required>
+                      <label for="eventvenue">Event Venue:</label>
+                      <input type="text" id="eventvenue" name="eventvenue" required>
 
-                  <button type="submit">Create Event</button>
-                </form>
-              </div>
-            </div>
-            <!--Edit event-->
+                      <label for="eventorganizer">Event Organizer:</label>
+                      <input type="text" id="eventorganizer" name="eventorganizer" required>
 
-            <div id="editEventModal" class="modal">
-              <div class="modal-content">
-                <span class="close" onclick="closeEditEventModal()">&times;</span>
+                      <label for="eventorganizeremail">Organizer's Email:</label>
+                      <input type="email" id="eventorganizeremail" name="eventorganizeremail" required>
 
-                <h2>Edit Event</h2>
-                <form id="editEventForm" method="post" action="/edit-event/:id">
-                  <!-- Add a hidden field for method override -->
-                  <input type="hidden" name="_method" value="PUT">
+                      <label for="eventorganizerphonenumber">Organizer's Phone Number:</label>
+                      <input type="tel" id="eventorganizerphonenumber" name="eventorganizerphonenumber" required>
 
-                  <label for="eventname-e">Event Name:</label>
-                  <input type="text" id="eventname-e" name="eventname" required>
+                      <button type="submit">Create Event</button>
+                    </form>
+                  </div>
+                </div>
+                <!--Edit event-->
 
-                  <label for="eventdescription-e">Event Description:</label>
-                  <textarea id="eventdescription-e" name="eventdescription" required></textarea>
-
-                  <label for="eventdate-e">Event Date:</label>
-                  <input type="date" id="eventdate-e" name="eventdate" required>
-
-                  <label for="eventtime-e">Event Time:</label>
-                  <input type="text" id="eventtime-e" name="eventtime" required>
-
-                  <label for="eventvenue-e">Event Venue:</label>
-                  <input type="text" id="eventvenue-e" name="eventvenue" required>
-
-                  <label for="eventorganizer-e">Event Organizer:</label>
-                  <input type="text" id="eventorganizer-e" name="eventorganizer" required>
-
-                  <label for="eventorganizeremail-e">Organizer's Email:</label>
-                  <input type="email" id="eventorganizeremail-e" name="eventorganizeremail" required>
-
-                  <label for="eventorganizerphonenumber-e">Organizer's Phone Number:</label>
-                  <input type="tel" id="eventorganizerphonenumber-e" name="eventorganizerphonenumber" required>
-
-                  <button type="submit">Save Changes</button>
-                </form>
-              </div>
-            </div>
 </body>
 <script>
 
 
   // Function to show the modal
-  function openModal() {
+const openModal = () => {
     document.getElementById('registrationModal').style.display = 'block';
-  }
+};
 
-  // Function to hide the modal
-  function closeModal() {
+// Function to hide the modal
+const closeModal = () => {
     document.getElementById('registrationModal').style.display = 'none';
-  }
+};
 
-  document.addEventListener('click', function (event) {
-    if (event.target.classList.contains('registerBtn')) {
-      eventId = event.target.getAttribute('data-eventid');
-      const eventName = event.target.getAttribute('data-eventname');
-
-      document.getElementById('eventNameInput').value = eventName;
-      document.getElementById('eventIdInput').value = eventId;
-
-      // Show the registration modal
-      openModal();
-    }
-  });
-  function openEditEventModal(eventData) {
-    // Parse the JSON string to get the event object
-    const event = JSON.parse(eventData);
-
-    // Use the event data to populate the edit form
-    document.getElementById('eventname-e').value = event.eventname;
-    document.getElementById('eventdescription-e').value = event.eventdescription;
-    document.getElementById('eventdate-e').value = event.eventdate.split('T')[0]; // Extract date part
-    document.getElementById('eventtime-e').value = event.eventtime;
-    document.getElementById('eventvenue-e').value = event.eventvenue;
-    document.getElementById('eventorganizer-e').value = event.eventorganizer;
-    document.getElementById('eventorganizeremail-e').value = event.eventorganizeremail;
-    document.getElementById('eventorganizerphonenumber-e').value = event.eventorganizerphonenumber;
-
-    // Show the edit event modal
-    document.getElementById('editEventModal').style.display = 'block';
-  }
-  // function to display create event
-  function openAddEventModal() {
+// Function to display create event modal
+const openAddEventModal = () => {
     document.getElementById('addEventModal').style.display = 'block';
-  }
+};
 
-  function closeAddEventModal() {
+// Function to close create event modal
+const closeAddEventModal = () => {
     document.getElementById('addEventModal').style.display = 'none';
-  }
+};
 
-  document.getElementById('addEventBtn').addEventListener('click', function () {
-    openAddEventModal();
-  });
+// Event map for registration modal
+const registrationModalEvents = {
+    '.registerBtn': function (event) {
+        const eventId = event.target.getAttribute('data-eventid');
+        const eventName = event.target.getAttribute('data-eventname');
 
+        document.getElementById('eventNameInput').value = eventName;
+        document.getElementById('eventIdInput').value = eventId;
 
+        // Show the registration modal
+        openModal();
+    }
+};
+
+// adding event to Google Calendar
+const addToCalendarEvents = {
+    '.addToCalendarBtn': function (event) {
+        const eventDetails = JSON.parse(event.target.getAttribute('data-eventDetails'));
+
+        // Create a Google Calendar event link
+        const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventDetails.eventname)}&dates=${encodeURIComponent(eventDetails.eventdate)}T${encodeURIComponent(eventDetails.eventtime)}&details=${encodeURIComponent(eventDetails.eventdescription)}&location=${encodeURIComponent(eventDetails.eventvenue)}`;
+
+        window.open(googleCalendarLink, '_blank');
+    }
+};
+
+// Event map for open add event modal button
+const addEventBtnEvents = {
+    '#addEventBtn': openAddEventModal
+};
+
+// event listeners based on the event maps
+document.addEventListener('click', function (event) {
+    Object.entries(registrationModalEvents).forEach(([selector, handler]) => {
+        if (event.target.classList.contains(selector.substring(1))) {
+            handler(event);
+        }
+    });
+
+    Object.entries(addToCalendarEvents).forEach(([selector, handler]) => {
+        if (event.target.classList.contains(selector.substring(1))) {
+            handler(event);
+        }
+    });
+
+    Object.entries(addEventBtnEvents).forEach(([selector, handler]) => {
+        if (event.target.matches(selector)) {
+            handler(event);
+        }
+    });
+});
 
 
 </script>
