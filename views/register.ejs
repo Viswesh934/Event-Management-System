@@ -6,128 +6,69 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button {
-            background-color: #3498db;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #1b5a7a;
-        }
-
-        p {
-            text-align: center;
-            margin-top: 16px;
-            color: #666;
-        }
-
-        a {
-            color: #3498db;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-gray-200 flex justify-center items-center h-screen">
 
+    <form action="/register" method="post"
+        class="bg-white p-8 rounded-md shadow-md w-96 max-w-screen-md">
 
-    <form action="/register" method="post">
-        <h2>
-            Registration form
-        </h2>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        <h2 class="text-2xl mb-4 font-bold">Registration Form</h2>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+        <label for="username" class="block text-gray-700 mb-2">Username:</label>
+        <input type="text" id="username" name="username" required
+            class="w-full px-3 py-2 border rounded-md mb-4">
+
+        <label for="password" class="block text-gray-700 mb-2">Password:</label>
+        <input type="password" id="password" name="password"
+            pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
             title="Password must contain at least 8 characters, including one number, one lowercase, and one uppercase letter."
-            required>
+            required
+            class="w-full px-3 py-2 border rounded-md mb-4">
 
-        <label for="confirmPassword">Confirm Password:</label>
+        <label for="confirmPassword" class="block text-gray-700 mb-2">Confirm Password:</label>
         <input type="password" id="confirmPassword" name="confirmPassword"
             pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$"
             title="Password must contain at least 8 characters, including one number, one lowercase, and one uppercase letter."
-            required oninput="checkPasswordMatch()">
+            required oninput="checkPasswordMatch()"
+            class="w-full px-3 py-2 border rounded-md mb-4">
 
+        <label for="email" class="block text-gray-700 mb-2">Email:</label>
+        <input type="email" id="email" name="email" required
+            class="w-full px-3 py-2 border rounded-md mb-4">
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <label for="phoneNumber" class="block text-gray-700 mb-2">Phone Number:</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="e.g., +1 123-456-7890" required
+            class="w-full px-3 py-2 border rounded-md mb-4">
 
-        <label for="phoneNumber">Phone Number:</label>
-        <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="e.g., +1 123-456-7890" required>
-        <button type="submit">Register</button>
-        <p>Already have an account? <a href="/login">Login</a></p>
+        <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-md mb-4">Register</button>
+
+        <p class="text-center text-gray-600">Already have an account? <a href="/login" class="text-blue-500">Login</a></p>
     </form>
 
+    <!-- Script to check if the password matches the confirm password and show alert -->
+    <script>
+        function checkPasswordMatch() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+                document.getElementById("confirmPassword").setCustomValidity("Passwords do not match");
+            } else {
+                document.getElementById("confirmPassword").setCustomValidity("");
+            }
+        }
+
+        // Show alert based on the server-provided message
+        window.onload = function () {
+            var serverMessage = "<%= message %>";
+            if (serverMessage === "User already exists") {
+                alert("User already exists");
+            }
+        };
+    </script>
+
 </body>
-<!--script to check if the password matches the confirm password and show alert-->
-<script>
-    function checkPasswordMatch() {
-        var password = document.getElementById("password").value;
-        var confirmPassword = document.getElementById("confirmPassword").value;
-
-        if (password !== confirmPassword) {
-            document.getElementById("confirmPassword").setCustomValidity("Passwords do not match");
-        } else {
-            document.getElementById("confirmPassword").setCustomValidity("");
-        }
-    }
-
-    // Show alert based on the server-provided message
-    window.onload = function () {
-        var serverMessage = "<%= message %>";
-        if (serverMessage === "User already exists") {
-            alert("User already exists");
-        }
-    };
-</script>
 
 </html>

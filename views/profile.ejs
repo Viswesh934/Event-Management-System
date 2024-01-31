@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>User Profile</h1>
-    <% if (user) { %>
-        <p>Welcome, <%= user.username %>!</p>
-        <ul>
-            <li><strong>Username:</strong> <%= user.username %></li>
-            <li><strong>Email:</strong> <%= user.email %></li>
-            <li><strong>Phone Number:</strong> <%= user.phonenumber %></li>
+
+<body class="font-sans bg-gradient-to-r from-purple-500 to-indigo-700 text-white p-8 min-h-screen flex flex-col justify-center items-center">
+
+    <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg text-gray-800">
+
+        <h1 class="text-3xl font-bold mb-6 text-center">User Profile</h1>
+
+        <% if (user) { %>
+        <div class="bg-blue-500 text-white py-4 mb-8 rounded text-center">
+            <p>Welcome, <%= user.username %>!</p>
+        </div>
+        <ul class="list-disc pl-6">
+            <li><strong class="font-bold">Username:</strong> <%= user.username %></li>
+            <li><strong class="font-bold">Email:</strong> <%= user.email %></li>
+            <li><strong class="font-bold">Phone Number:</strong> <%= user.phonenumber %></li>
         </ul>
-    <% } else { %>
-        <p>User not found</p>
-    <% } %>
-    <a href="/">Home</a>
+        <% } else { %>
+        <p class="text-lg text-red-500">User not found</p>
+        <% } %>
+
+        <a href="/" class="block text-center text-blue-500 mt-6 hover:underline">Home</a>
+
+    </div>
+
 </body>
+
 </html>
