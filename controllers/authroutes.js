@@ -61,9 +61,10 @@ const register_page = async(req, res) => {
 
 const registerUser = async (req, res) => {
     try {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const salt =10;
+      const hashedPassword = await bcrypt.hash(req?.body?.password,10);
       const user = new User({
-        username: req.body.username,
+        username: req?.body?.username,
         password: hashedPassword,
         email: req.body.email,
         phonenumber: req.body.phoneNumber,
@@ -71,9 +72,9 @@ const registerUser = async (req, res) => {
   
       const existingUser = await User.findOne({
         $or: [
-          { username: req.body.username },
-          { email: req.body.email },
-          { phonenumber: req.body.phoneNumber }
+          { username: req?.body?.username },
+          { email: req?.body?.email },
+          { phonenumber: req?.body?.phoneNumber }
         ]
       }).exec();
   
@@ -112,7 +113,7 @@ const registerUser = async (req, res) => {
   // render user profile
   const renderUserProfile = (req, res) => {
     try {
-      res.render('profile', { user: req.user });
+      res.render('profile', { user: req?.user });
     } catch (error) {
       console.log(error);
     }

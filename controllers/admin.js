@@ -1,3 +1,4 @@
+const flash = require('express-flash');
 const Analysis = require('../models/analysis');
 const events = require('../models/events');
 
@@ -19,8 +20,8 @@ const registerParticipant = async (req, res) => {
 
         if (existingParticipant) {
             // Participant is already registered
-            console.log('Participant is already registered');
-            return res.redirect('/events'); // Redirect or handle accordingly
+            req.flash('error', 'You have already registered for this event');
+            return res.redirect('/events');
         }
 
         await Analysis.findOneAndUpdate(
@@ -28,7 +29,7 @@ const registerParticipant = async (req, res) => {
             {
                 $push: {
                     participants: {
-                        username: req.user.username,
+                        username: req?.user?.username,
                         participantName,
                         organizationName: Organizationname,
                     },
@@ -43,6 +44,7 @@ const registerParticipant = async (req, res) => {
         res.handleServerError(error);
     }
 };
+
 
 // Function to fetch analytics data
 const getAnalyticsData = async (req, res) => {

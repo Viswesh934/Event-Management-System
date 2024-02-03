@@ -21,12 +21,16 @@
                         <button class="dropbtn">Menu</button>
                         <div
                             class="dropdown-content hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-2">
-                            <button id="profile" class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Profile</button>
-                            <button id="events" class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Events</button>
+                            <button id="profile"
+                                class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Profile</button>
+                            <button id="events"
+                                class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Events</button>
                             <% if (user.role=='admin' ) { %>
-                                <button id="dashboard" class="btn-nav text-blue-500 hover:bg-blue-100">Analytics</button>
+                                <button id="dashboard"
+                                    class="btn-nav text-blue-500 hover:bg-blue-100">Analytics</button>
                                 <% } %>
-                            <button id="logout" class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Logout</button>
+                                    <button id="logout"
+                                        class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Logout</button>
                         </div>
                     </div>
                 </div>
@@ -42,8 +46,11 @@
                                     <button class="dropbtn">Menu</button>
                                     <div
                                         class="dropdown-content hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-2">
-                                        <button id="signUp" class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Sign Up</button>
-                                        <button id="signIn" class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Login</button>
+                                        <button id="signUp"
+                                            class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Sign
+                                            Up</button>
+                                        <button id="signIn"
+                                            class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Login</button>
                                     </div>
                                 </div>
                     </div>
@@ -107,42 +114,20 @@
         const dropdownBtn = document.querySelector('.dropbtn');
         const dropdownContent = document.querySelector('.dropdown-content');
 
+        const addClickListener = (button, targetUrl) => {
+            if (button) {
+                button.addEventListener('click', function () {
+                    window.location.href = targetUrl;
+                });
+            }
+        };
+        addClickListener(signUpButton, '/register');
+        addClickListener(signInButton, '/login');
+        addClickListener(logoutButton, '/logout');
+        addClickListener(profileButton, '/profile');
+        addClickListener(events, '/events');
+        addClickListener(Analytics, '/analytics');
 
-        if (signUpButton) {
-            signUpButton.addEventListener('click', () => {
-                window.location.href = "/register";
-            });
-        }
-
-        if (signInButton) {
-            signInButton.addEventListener('click', () => {
-                window.location.href = "/login";
-            });
-        }
-
-        if (logoutButton) {
-            logoutButton.addEventListener('click', () => {
-                window.location.href = "/logout";
-            });
-        }
-
-        if (profileButton) {
-            profileButton.addEventListener('click', () => {
-                window.location.href = "/profile";
-            });
-        }
-
-        if (events) {
-            events.addEventListener('click', () => {
-                window.location.href = "/events";
-            });
-        }
-
-        if (Analytics) {
-            Analytics.addEventListener('click', () => {
-                window.location.href = "/analytics";
-            });
-        }
         if (dropdownBtn && dropdownContent) {
             dropdownBtn.addEventListener('click', () => {
                 dropdownContent.classList.toggle('hidden');
