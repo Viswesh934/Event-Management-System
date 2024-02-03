@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/Event-Manager');
+mongoose.connect(process.env.MONGODB_URI, {});
 if(mongoose.connection.readyState){
     console.log("Connected to database");
 }

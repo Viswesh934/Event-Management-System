@@ -5,170 +5,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .navbar {
-            background-color: #3498db;
-            overflow: hidden;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-
-        .navbar a {
-            float: left;
-            display: block;
-            color: #fff;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        .navbar a:hover,
-        .dropdown:hover .dropbtn {
-            background-color: #1b5a7a;
-        }
-
-        .dropdown {
-            float: left;
-            overflow: hidden;
-        }
-
-        .dropdown .dropbtn {
-            font-size: 16px;
-            border: none;
-            outline: none;
-            color: #fff;
-            padding: 14px 16px;
-            background-color: inherit;
-            font-family: inherit;
-            margin: 0;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content button {
-            color: #333;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: center;
-            background-color: #3498db;
-            border: none;
-            border-radius: 4px;
-            margin: 5px;
-            cursor: pointer;
-        }
-
-        .dropdown-content button:hover {
-            background-color: #1b5a7a;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        p {
-            color: #333;
-            text-align: center;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
-    <% if (user) { %>
-        <div class="navbar">
-            <p>Welcome, <%= user.username %>!</p>
-            <div class="dropdown">
-                <button class="dropbtn">Menu</button>
-                <div class="dropdown-content">
-                    <button id="logout">Logout</button>
-                    <button id="profile">Profile</button>
-                    <button id="events">Events</button>
-                    <% if (user.role=='admin' ) { %>
-                        <button id="dashboard">Analytics</button>
-                        <% } %>
-                </div>
-            </div>
-        </div>
-        <% } else { %>
-            <% if (message) { %>
-                <p>
-                    <%= message %>
-                </p>
-                <% } %>
-                    <p>Welcome to the home page</p>
-                    <div class="navbar">
-                        <div class="dropdown">
-                            <button class="dropbtn">Menu</button>
-                            <div class="dropdown-content">
-                                <button id="signUp">Sign Up</button>
-                                <button id="signIn">Login</button>
-                            </div>
+<body class="font-sans bg-gray-100">
+
+    <div class="bg-blue-500 text-white py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Event Management System</h1>
+
+            <% if (user) { %>
+                <div class="flex items-center space-x-4">
+                    <p>Welcome, <%= user.username %>!</p>
+                    <div class="relative group">
+                        <button class="dropbtn">Menu</button>
+                        <div
+                            class="dropdown-content hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-2">
+                            <button id="profile"
+                                class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Profile</button>
+                            <button id="events"
+                                class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Events</button>
+                            <% if (user.role=='admin' ) { %>
+                                <button id="dashboard"
+                                    class="btn-nav text-blue-500 hover:bg-blue-100">Analytics</button>
+                                <% } %>
+                                    <button id="logout"
+                                        class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Logout</button>
                         </div>
+                    </div>
+                </div>
+                <% } else { %>
+                    <div class="flex items-center space-x-4">
+                        <% if (message) { %>
+                            <p class="text-red-500">
+                                <%= message %>
+                            </p>
+                            <% } %>
+                                <p>Welcome to the home page</p>
+                                <div class="relative group">
+                                    <button class="dropbtn">Menu</button>
+                                    <div
+                                        class="dropdown-content hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-2">
+                                        <button id="signUp"
+                                            class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Sign
+                                            Up</button>
+                                        <button id="signIn"
+                                            class="btn-nav text-blue-500 hover:bg-blue-100 w-full text-left">Login</button>
+                                    </div>
+                                </div>
                     </div>
                     <% } %>
 
-                        <p>Explore the Event Management System for seamless event planning and organization.</p>
+        </div>
+    </div>
 
-                        <script>
-                            //button click event for sign up, sign in, and navigation
-                            const signUpButton = document.getElementById('signUp');
-                            const signInButton = document.getElementById('signIn');
-                            const logoutButton = document.getElementById('logout');
-                            const profileButton = document.getElementById('profile');
-                            const events = document.getElementById('events');
-                            const Analytics = document.getElementById('dashboard');
+    <div class="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold mb-4 text-blue-500">Why Choose Our Event Management System?</h2>
 
-                            if (signUpButton) {
-                                signUpButton.addEventListener('click', () => {
-                                    window.location.href = "/register";
-                                });
-                            }
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2 text-gray-800">Effortless Event Creation</h3>
+                <p>Create and manage events with ease. Our user-friendly interface allows you to set up events quickly
+                    and efficiently.</p>
+            </div>
 
-                            if (signInButton) {
-                                signInButton.addEventListener('click', () => {
-                                    window.location.href = "/login";
-                                });
-                            }
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2 text-gray-800">Robust Registration System</h3>
+                <p>Efficiently handle registrations with our built-in registration system. Keep track of attendees and
+                    streamline the registration process.</p>
+            </div>
 
-                            if (logoutButton) {
-                                logoutButton.addEventListener('click', () => {
-                                    window.location.href = "/logout";
-                                });
-                            }
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2 text-gray-800">Analytics and Insights</h3>
+                <p>Gain valuable insights into your events with our analytics tools. Track registrations, analyze
+                    attendee demographics, and make informed decisions for future events.</p>
+            </div>
 
-                            if (profileButton) {
-                                profileButton.addEventListener('click', () => {
-                                    window.location.href = "/profile";
-                                });
-                            }
+            <div class="mb-4">
+                <h3 class="text-xl font-semibold mb-2 text-gray-800">User-Friendly Dashboard</h3>
+                <p>Access all your event-related information in one place. Our intuitive dashboard provides a
+                    comprehensive overview of your events and activities.</p>
+            </div>
+        </div>
+    </div>
 
-                            if (events) {
-                                events.addEventListener('click', () => {
-                                    window.location.href = "/events";
-                                });
-                            }
+    <div class="bg-gradient-to-r from-blue-500 to-purple-500 py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-4 text-white">Ready to Get Started?</h2>
+            <p class="text-lg mb-8 text-white">Join us today and experience the power of seamless event management.</p>
+            <a href="/register"
+                class="bg-white text-blue-500 hover:bg-blue-700 transition duration-300 py-2 px-6 rounded-full text-lg font-semibold">Sign
+                Up Now</a>
+        </div>
+    </div>
 
-                            if (Analytics) {
-                                Analytics.addEventListener('click', () => {
-                                    window.location.href = "/analytics";
-                                });
-                            }
-                        </script>
+    <footer class="text-center py-8">
+        <p class="text-gray-500 text-sm">© 2024 Event Management System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        //button click event for sign up, sign in, and navigation
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+        const logoutButton = document.getElementById('logout');
+        const profileButton = document.getElementById('profile');
+        const events = document.getElementById('events');
+        const Analytics = document.getElementById('dashboard');
+        const dropdownBtn = document.querySelector('.dropbtn');
+        const dropdownContent = document.querySelector('.dropdown-content');
+
+        const addClickListener = (button, targetUrl) => {
+            if (button) {
+                button.addEventListener('click', function () {
+                    window.location.href = targetUrl;
+                });
+            }
+        };
+        addClickListener(signUpButton, '/register');
+        addClickListener(signInButton, '/login');
+        addClickListener(logoutButton, '/logout');
+        addClickListener(profileButton, '/profile');
+        addClickListener(events, '/events');
+        addClickListener(Analytics, '/analytics');
+
+        if (dropdownBtn && dropdownContent) {
+            dropdownBtn.addEventListener('click', () => {
+                dropdownContent.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!event.target.matches('.dropbtn') && !event.target.matches('.dropdown-content')) {
+                    dropdownContent.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+
 </body>
 
 </html>

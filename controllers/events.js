@@ -5,7 +5,7 @@ const events  = require('../models/events');
 const getEvents = async (req, res) => {
     try {
         const data = await events.find({});
-        res.render('events', { user: req.user, events: data });
+        res.render('events', { user: req?.user, events: data });
     } catch (err) {
         throw err;
     }
@@ -14,7 +14,7 @@ const getEvents = async (req, res) => {
 // filter events
 
 const filterEvents = async (req, res) => {
-    const { filterBy, filterValue } = req.body;
+    const { filterBy, filterValue } = req?.body;
 
     let query = {};
 
@@ -41,7 +41,7 @@ const filterEvents = async (req, res) => {
 
     try {
         const data = await events.find(query);
-        res.render('events', { user: req.user, events: data });
+        res.render('events', { user: req?.user, events: data });
     } catch (err) {
         throw err;
     }
