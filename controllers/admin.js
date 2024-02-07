@@ -41,7 +41,7 @@ const registerParticipant = async (req, res) => {
 
         res.redirect('/events');
     } catch (error) {
-        res.handleServerError(error);
+        throw error
     }
 };
 
@@ -57,7 +57,7 @@ const getAnalyticsData = async (req, res) => {
 
         res.render('analytics', { eventNames, registrationCounts });
     } catch (error) {
-        res.handleServerError(error);
+        throw error
     }
 };
 
@@ -93,7 +93,7 @@ const createEvent = async (req, res) => {
             await event.save();
             res.redirect('/events');
         } catch (error) {
-            res.handleServerError(error);
+            throw error
         }
     } else {
         res.redirect('/events');
@@ -112,7 +112,7 @@ const deleteEvent = async (req, res) => {
 
             res.redirect('/events');
         } catch (error) {
-            res.handleServerError(error);
+            throw error;
         }
     } else {
         res.redirect('/events', { msg: 'You are not authorized to delete events' });
@@ -125,3 +125,4 @@ module.exports = {
     createEvent,
     deleteEvent,
 };
+
