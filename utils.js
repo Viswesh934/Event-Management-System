@@ -8,7 +8,6 @@ const method = require('method-override');
 const authroutes = require('./routes/authroutes');
 const eventroutes = require('./routes/events');
 const adminroutes = require('./routes/admin');
-const preResponseMiddleware = require('./middleware/preResponseMiddleware');
 const path = require('path');
 
 const setupExpressApp = () => {
@@ -28,7 +27,6 @@ const setupRoutes = (app) => {
 };
 
 const startServer = (app, PORT) => {
-    app.use(preResponseMiddleware);
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const db = require('../db/connect');
 const schema = mongoose.Schema;
 // define user schema with username,password,email,phone number
 const userSchema = new schema({

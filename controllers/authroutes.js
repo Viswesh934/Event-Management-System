@@ -2,6 +2,7 @@ const User = require('../models/users');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const flash = require('connect-flash');
 
 // Passport.js user serialization and deserialization
 passport.serializeUser((user, done) => {
@@ -87,7 +88,6 @@ const registerUser = async (req, res) => {
       await user.save();
       res.redirect('/login');
     } catch (error) {
-      console.error(error);
       req.flash('message', 'An error occurred during registration');
       res.redirect('/register');
     }
@@ -119,6 +119,28 @@ const registerUser = async (req, res) => {
     }
   };
 
+  const localStrategyFunction = async (username, password, done) => {
+    try {
+      const user = await User.findOne({ username });
+      if (!user) {
+        return done(null, false, { message: 'Username or password is incorrect' });
+      }
+  
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+  
+      if (!isPasswordValid) {
+        return done(null, false, { message: 'Username or password is incorrect' });
+      }
+  
+      return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
+  };
+  
+ 
+  
+
 
   module.exports = {
     home,
@@ -127,5 +149,6 @@ const registerUser = async (req, res) => {
     registerUser,
     loginUser,
     logoutUser,
-    renderUserProfile,    
+    renderUserProfile,  
+    localStrategyFunction
   };

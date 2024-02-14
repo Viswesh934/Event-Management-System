@@ -4,6 +4,7 @@ const events = require('../models/events');
 const router = express.Router();
 const admincontroller = require('../controllers/admin');
 
+
 router.post('/analysis', admincontroller.registerParticipant);
 
 

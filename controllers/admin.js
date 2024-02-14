@@ -1,4 +1,4 @@
-const flash = require('express-flash');
+const flash = require('connect-flash');
 const Analysis = require('../models/analysis');
 const events = require('../models/events');
 
@@ -41,7 +41,8 @@ const registerParticipant = async (req, res) => {
 
         res.redirect('/events');
     } catch (error) {
-        res.handleServerError(error);
+        res.redirect('/events');
+        throw error
     }
 };
 
@@ -49,6 +50,9 @@ const registerParticipant = async (req, res) => {
 // Function to fetch analytics data
 const getAnalyticsData = async (req, res) => {
     try {
+        if (!req.isAuthenticated()) {
+            return res.redirect('/login'); 
+        }
         const analyticsData = await Analysis.find();
 
         // Extract relevant data for charts
@@ -57,7 +61,7 @@ const getAnalyticsData = async (req, res) => {
 
         res.render('analytics', { eventNames, registrationCounts });
     } catch (error) {
-        res.handleServerError(error);
+        throw error
     }
 };
 
@@ -93,7 +97,7 @@ const createEvent = async (req, res) => {
             await event.save();
             res.redirect('/events');
         } catch (error) {
-            res.handleServerError(error);
+            res.redirect('/events');
         }
     } else {
         res.redirect('/events');
@@ -112,7 +116,7 @@ const deleteEvent = async (req, res) => {
 
             res.redirect('/events');
         } catch (error) {
-            res.handleServerError(error);
+            throw error;
         }
     } else {
         res.redirect('/events', { msg: 'You are not authorized to delete events' });
@@ -125,3 +129,4 @@ module.exports = {
     createEvent,
     deleteEvent,
 };
+

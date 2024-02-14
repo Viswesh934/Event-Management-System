@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const db = require('../db/connect');
 const eventSchema = new mongoose.Schema({
     eventname: {
         type: String,
